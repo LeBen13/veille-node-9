@@ -28,11 +28,9 @@ app.set('view engine', 'ejs');
 
 
 app.get('/vider', function (req, res) {
-    console.log(__dirname);
 
     db.collection('adresse').remove({}, (err, resultat) => {
-        if (err) return console.log(err)
-        console.log('Supprimé');
+        if (err) return .log(err)
         res.redirect('/membres');
     });
 
@@ -40,15 +38,12 @@ app.get('/vider', function (req, res) {
 
 
 app.get('/peuplement', function (req, res) {
-    console.log(__dirname);
     let aoNouvAdd = peupler();
-    console.log(aoNouvAdd);
 
     let iLongueur = aoNouvAdd.length;
     for (let i = 0; i < iLongueur; i++) {
         db.collection('adresse').save(aoNouvAdd[i], (err, result) => {
             if (err) return console.log(err)
-            console.log('sauvegarder dans la BD')
 
         })
     }
@@ -63,7 +58,6 @@ app.get('/peuplement', function (req, res) {
 
 
 app.get('/formulaire', function (req, res) {
-    console.log(__dirname);
     res.render('formulaire.ejs');
 
 })
@@ -112,7 +106,6 @@ app.get('/trier/:cle/:ordre', function (req, res) {
             ordre = 'asc';
         }
 
-        console.log('util = ' + util.inspect(resultat));
         res.render('membres.ejs', {
             membres: resultat,
             ordre_url: ordre
@@ -123,11 +116,9 @@ app.get('/trier/:cle/:ordre', function (req, res) {
 
 app.get('/ajouter', function (req, res) {
 
-    console.log('la route /ajouter')
 
     db.collection('adresse').save(req.query, (err, result) => {
         if (err) return console.log(err)
-        console.log('sauvegarder dans la BD')
         res.redirect('/membres')
 
     })
@@ -138,9 +129,7 @@ app.post('/ajouter_ajax', (req, res) => {
 
     db.collection('adresse').save(req.body, (err, result) => {
         if (err) return console.log(err)
-        console.log('sauvegarder dans la BD')
         res.send(JSON.stringify(req.body));
-        // res.status(204)
     })
 })
 
@@ -148,7 +137,6 @@ app.post('/ajouter_ajax', (req, res) => {
 
 
 app.get('/supprimer/:id', (req, res) => {
-    console.log(req.params.id)
     let id = req.params.id
     db.collection('adresse').findOneAndDelete({
         "_id": ObjectID(req.params.id)
@@ -161,14 +149,12 @@ app.get('/supprimer/:id', (req, res) => {
 
 
 app.post('/supprimer_ajax', (req, res) => {
-    console.log('***********')
-    console.log(req.body)
     req.body._id = ObjectID(req.body._id);
     db.collection('adresse').findOneAndDelete({
         "_id": req.body._id
     }, (err, resultat) => {
 
-        if (err) return console.log(err)
+        if (err) return .log(err)
         res.send(JSON.stringify(req.body));
     })
 })
@@ -178,9 +164,7 @@ app.post('/supprimer_ajax', (req, res) => {
 
 app.post('/modifier', function (req, res) {
 
-    console.log('la route /modifier')
 
-    console.log('sauvegarde')
     let oModif = {
         "_id": ObjectID(req.body['_id']),
         nom: req.body.nom,
@@ -192,7 +176,6 @@ app.post('/modifier', function (req, res) {
 
     db.collection('adresse').save(oModif, (err, result) => {
         if (err) return console.log(err)
-        console.log('sauvegarder dans la BD')
         res.redirect('/membres')
 
     })
@@ -204,7 +187,6 @@ app.post('/modifier_ajax', (req, res) => {
 
     db.collection('adresse').save(req.body, (err, result) => {
         if (err) return console.log(err)
-        console.log('sauvegarder dans la BD')
         res.send(JSON.stringify(req.body));
         // res.status(204)
     })
@@ -221,9 +203,7 @@ let db // variable qui contiendra le lien sur la BD
 MongoClient.connect('mongodb://127.0.0.1:27017', (err, database) => {
     if (err) return console.log(err)
     db = database.db('carnet_adresse')
-    // lancement du serveur Express sur le port 8081
     app.listen(8081, () => {
-        console.log('connexion à la BD et on écoute sur le port 8081')
     })
 
 })
